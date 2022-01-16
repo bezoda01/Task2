@@ -1,19 +1,14 @@
-import com.sun.tools.hat.internal.model.Root;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-class Singleton {
+class Singletone {
 
     private static WebDriver driver;
 
@@ -36,7 +31,6 @@ class Singleton {
     }
 
 
-
     public WebDriver createInstance(String browser) {
 
         try {
@@ -54,13 +48,25 @@ class Singleton {
         } catch (IllegalAccessException | ClassNotFoundException e) {
             // exception or log for class not found
         } catch (InstantiationException e) {
-            // exception of log for instantiation problem
+            // exception to log for instantiation problem
         }
         return driver;
     }
 
+    //for Xpath
     public void waitTo(int seconds, String xpath) {
         new WebDriverWait(getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
+    }
+
+    //for SccSelector
+    public void waitTo(String cssSelector, int seconds) {
+        new WebDriverWait(getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(cssSelector)));
+    }
+
+    //for implicit wait
+    public void implicitWait(int seconds) {
+        getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(seconds));
+
     }
 
     int returnInInt(String str) {
@@ -75,5 +81,16 @@ class Singleton {
         temp = masStr2[0] + masStr2[1] + masStr2[2];
         result = Integer.parseInt(temp);
         return result;
+    }
+
+    void tearDown() {
+        getDriver().quit();
+    }
+
+    String correctPrice(String element) {
+        String price;
+        String[] temp = element.split(" ",2);
+        price = temp[0];
+        return price;
     }
 }

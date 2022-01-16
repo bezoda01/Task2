@@ -1,16 +1,7 @@
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class AboutPage extends Singleton{
-
-    AboutPage() {
-
-    }
-
-    void quit() {
-        getDriver().quit();
-    }
+public class AboutPage extends Singletone {
 
     int returnPlayersInGame() {
         waitTo(2, "//div[@class = 'online_stat'][2]");
