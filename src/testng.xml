@@ -6,9 +6,14 @@
 
     <test name="Test1">
         <classes>
-            <class name="PartOne"/>
+            <class name="PartFirst"/>
         </classes>
     </test>
 
+    <test name="Test2">
+        <classes>
+            <class name="PartSecond"/>
+        </classes>
+    </test>
 
 </suite>
