@@ -32,6 +32,20 @@ public class MainPage extends Singletone {
         executor.executeScript("arguments[0].click();", buttonLeader);
     }
 
+    void moveToCommunity() {
+        WebElement community = getDriver().findElement(By.xpath("//a[contains(text(),'СООБЩЕСТВО')]"));
+        Actions actions = new Actions(getDriver());
+        actions.moveToElement(community).release().build().perform();
+
+    }
+
+    void clickToComMarket() {
+        waitTo(5, "//a[contains(text(),'Торговая площадка')]");
+        JavascriptExecutor executor = (JavascriptExecutor)getDriver();
+        WebElement market = getDriver().findElement(By.xpath("//a[contains(text(),'Торговая площадка')]"));
+        executor.executeScript("arguments[0].click();", market);
+    }
+
 
 
 }
