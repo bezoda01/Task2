@@ -2,7 +2,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
-import java.time.Duration;
 import java.util.ArrayList;
 
 public class TopSellersPage extends Singletone {
@@ -89,19 +88,22 @@ public class TopSellersPage extends Singletone {
     }
 
 
-
-    WebElement firstGame() {
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    void setInfoAboutGameFirst() {
         infoAboutGameFirst = new ArrayList<String>(){{
             add(getDriver().findElement(By.xpath("//a[1]//div//div//span[@class = 'title']")).getText());
             add(getDriver().findElement(By.xpath("//a[1]//div//div[contains(@class,'released')]")).getText());
             add(getDriver().findElement(By.xpath("//a[1]//div//div[contains(@class,'price')]//div[contains(@class,'price')]")).getText());
         }};
+    }
+    WebElement firstGame() {
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        setInfoAboutGameFirst();
+
         return getDriver().findElement(By.xpath("//div[@id = 'search_resultsRows']//a[1]"));
     }
 
