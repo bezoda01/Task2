@@ -13,13 +13,14 @@ public class PartFirst extends Singletone{
         mainPage = new MainPage();
         aboutPage = new AboutPage();
 
-        createInstance("chrome");
+        //first run
+        getDriver("chrome");
     }
 
     @Test
     void test() {
         mainPage.goToPage();
-        Assert.assertEquals(mainPage.clickToAbout().getText(), "О STEAM", "Page was not open");
+        Assert.assertTrue(mainPage.clickToAbout().isEnabled(), "Page was not open");
         mainPage.clickToAbout().click();
         Assert.assertTrue(aboutPage.onlineComparison(), "The number of players is now more than online");
         aboutPage.clickToMarket().click();

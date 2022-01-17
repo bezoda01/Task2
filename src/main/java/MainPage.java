@@ -11,7 +11,7 @@ public class MainPage extends Singletone {
 
     WebElement clickToAbout() {
         waitTo(5, "//a[contains(text(),'О STEAM')]");
-        return getDriver().findElement(By.xpath("//a[contains(text(),'STEAM')]"));
+        return getDriver().findElement(By.xpath("//a[contains(text(),'О STEAM')]"));
     }
 
     WebElement isThatMarket() {

@@ -11,7 +11,6 @@ public class PartThird extends Singletone{
     void setUp() {
         mainPage = new MainPage();
         tradingPage = new TradingPage();
-        createInstance("chrome");
     }
 
     @Test
@@ -29,14 +28,22 @@ public class PartThird extends Singletone{
         tradingPage.selectLifeStealer();
         tradingPage.clickAndInput();
         tradingPage.clickRarityAndSearch();
-        Assert.assertTrue(tradingPage.filterCheck().isEnabled(), "Filters was not select");
+        tradingPage.setFilterArr();
+        for(String filter : tradingPage.filter) {
+            Assert.assertTrue(tradingPage.returnElement(filter).isEnabled(), "Element was not select" );
+        }
         Assert.assertTrue(tradingPage.methodInfoFirstFive(), "Not all elements have 'Golden'");
+        tradingPage.removeIcons();
+        Assert.assertNotEquals(tradingPage.numbersResultsBefore,tradingPage.numbersResultsAfter, "Filters was not change");
+        tradingPage.clickToItem().click();
+        tradingPage.getInfoAboutItem();
+        Assert.assertEquals(tradingPage.filterItemBefore, tradingPage.filterItemAfter, "Filters was not change");
     }
 
 
 
-//    @AfterTest
-//    void quit() {
-//        tearDown();
-//    }
+    @AfterTest
+    void quit() {
+        tearDown();
+    }
 }

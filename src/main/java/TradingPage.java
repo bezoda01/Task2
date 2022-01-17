@@ -1,14 +1,23 @@
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.Collections;
 
 public class TradingPage extends Singletone {
     ArrayList<String> firstFive = new ArrayList<>();
+    ArrayList<String> filter;
+    int numbersResultsBefore;
+    int numbersResultsAfter;
+    WebElement firstItemName;
+    String secondItemName;
+    String secondItemHero;
+    String getSecondItemRarity;
+    ArrayList<String> filterItemBefore;
+    ArrayList<String> filterItemAfter;
+
 
 
     WebElement checkIsOpen() {
@@ -60,11 +69,18 @@ public class TradingPage extends Singletone {
         return getDriver().findElement(By.xpath("//div[@onclick]//span[contains(text(),'Поиск')]"));
     }
 
-    WebElement filterCheck() {
-        return getDriver().findElement(By.xpath("//div[@style = 'display: inline-block; margin: 10px 0;']//a[contains(text(),'golden') or contains(text(),'Immortal') or contains(text(),'hero') or contains(text(),'category_570_Hero')]"));
+    void setFilterArr() {
+        filter = new ArrayList<String>(){{
+            add("//*[contains(text(),'Dota 2')]");
+            add("//*[contains(text(),'Lifestealer')]");
+            add("//*[contains(text(),'Immortal')]");
+            add("//*[contains(text(),'golden')]");
+        }};
+
     }
 
     boolean methodInfoFirstFive() {
+
         int counter = 0;
         for (int i = 0; i < 5; i++) {
             String temp = getDriver().findElement(By.id("result_" + i + "_name")).getText();
@@ -78,6 +94,50 @@ public class TradingPage extends Singletone {
         }
         return counter == 5;
     }
+
+    WebElement returnElement(String element) {
+        return getDriver().findElement(By.xpath(element));
+    }
+
+    void removeIcons() {
+        numbersResultsBefore = Integer.parseInt(getDriver().findElement(By.id("searchResults_total")).getText());
+        WebElement goldenRemove = getDriver().findElement(By.xpath("//*[contains(text(),'golden')]//span"));
+        goldenRemove.click();
+        WebElement dotaRemove = getDriver().findElement(By.xpath("//a[@href][1]/span"));
+        dotaRemove.click();
+        numbersResultsAfter = Integer.parseInt(getDriver().findElement(By.id("searchResults_total")).getText());
+    }
+
+    WebElement clickToItem() {
+        filterItemBefore = new ArrayList<String>() {{
+            add(getDriver().findElement(By.id("result_0_name")).getText());
+            add(getDriver().findElement(By.xpath("//*[contains(text(),'Lifestealer')]//span/..")).getText());
+            add(getDriver().findElement(By.xpath("//*[contains(text(),'Immortal')]//span/..")).getText());
+        }};
+        firstItemName = getDriver().findElement(By.id("result_0_name"));
+        return firstItemName;
+    }
+
+    void getInfoAboutItem() {
+        waitTo(5, "//div[contains(text(),'Lifestealer')]");
+        String tempHero = getDriver().findElement(By.xpath("//div[contains(text(),'Lifestealer')]")).getText();
+        String[] temp = tempHero.split(" ");
+        String tempRarity = getDriver().findElement(By.id("largeiteminfo_item_type")).getText();
+        String[] tempRarityMass = tempRarity.split(" ");
+        secondItemHero = temp[1];
+        getSecondItemRarity = tempRarityMass[1];
+        secondItemName = getDriver().findElement(By.id("largeiteminfo_item_name")).getText();
+        filterItemAfter = new ArrayList<String>(){{
+            add(secondItemName);
+            add(secondItemHero);
+            add(getSecondItemRarity);
+        }};
+    }
+
+
+
+
+
 
 
 }
