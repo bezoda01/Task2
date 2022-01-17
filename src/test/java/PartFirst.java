@@ -6,15 +6,18 @@ import org.testng.annotations.Test;
 public class PartFirst extends Singletone{
     private MainPage mainPage;
     private AboutPage aboutPage;
-
+    private PerformIs performIs;
 
     @BeforeTest
     void setUp() {
-        mainPage = new MainPage();
-        aboutPage = new AboutPage();
-
         //first run
         getDriver("chrome");
+
+        mainPage = new MainPage(getDriver());
+        aboutPage = new AboutPage(getDriver());
+        performIs = new PerformIs();
+
+
     }
 
     @Test
@@ -29,6 +32,6 @@ public class PartFirst extends Singletone{
 
     @AfterTest
     void quit() {
-        tearDown();
+        performIs.tearDown();
     }
 }
