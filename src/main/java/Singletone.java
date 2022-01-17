@@ -24,13 +24,6 @@ class Singletone {
 
     private String browser;
 
-
-    public void setDriverClass(Class<?> driverClass) {
-        this.driverClass = driverClass;
-    }
-
-    private Class<?> driverClass;
-
     public WebDriver getDriver(String browser) {
         setBrowser(browser);
         try {
@@ -48,9 +41,8 @@ class Singletone {
                     setBrowser(browser);
                     DriverManagerType driverManagerType = DriverManagerType.valueOf(getBrowser().toUpperCase());
                     Class<?> driverClass = Class.forName(driverManagerType.browserClass());
-                    setDriverClass(Class.forName(driverManagerType.browserClass()));
                     WebDriverManager.getInstance(driverManagerType).setup();
-                    driver = (WebDriver) driverClass.newInstance();//создать новый объект
+                    driver = (WebDriver) driverClass.newInstance();
                     driver.manage().window().maximize();
                     return driver;
                 }
@@ -71,28 +63,6 @@ class Singletone {
         return driver;
     }
 
-
-//    public void createInstance(String browser) {
-//
-//        try {
-//
-//            DriverManagerType driverManagerType = DriverManagerType.valueOf(browser.toUpperCase());
-//            Class<?> driverClass = Class.forName(driverManagerType.browserClass());
-//
-//            setDriverClass(Class.forName(driverManagerType.browserClass()));
-//            WebDriverManager.getInstance(driverManagerType).setup();
-////            driver = (WebDriver) driverClass.newInstance();
-////            driver.manage().window().maximize();
-//
-//
-//
-//        } catch (IllegalAccessException | ClassNotFoundException e) {
-//            // exception or log for class not found
-//        } catch (InstantiationException e) {
-//            // exception to log for instantiation problem
-//        }
-////        return driver;
-//    }
 
     //for Xpath
     public void waitTo(int seconds, String xpath) {
