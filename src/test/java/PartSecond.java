@@ -7,14 +7,17 @@ public class PartSecond extends Singletone {
     private MainPage mainPage;
     private TopSellersPage topSellersPage;
     private GamePage gamePage;
+    private PerformIs performIs;
+
 
     @BeforeTest
     void setUp() {
         getDriver("chrome");
 
-        mainPage = new MainPage();
-        topSellersPage = new TopSellersPage();
-        gamePage = new GamePage();
+        mainPage = new MainPage(getDriver());
+        topSellersPage = new TopSellersPage(getDriver());
+        gamePage = new GamePage(getDriver());
+        performIs = new PerformIs();
     }
 
     @Test
@@ -37,7 +40,7 @@ public class PartSecond extends Singletone {
 
     @AfterTest
     void quit() {
-        tearDown();
+        performIs.tearDown();
     }
 
 }

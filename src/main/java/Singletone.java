@@ -36,7 +36,6 @@ class Singletone {
                     WebDriverManager.chromedriver().setup();
                     driver = new ChromeDriver(options);
                     driver.manage().window().maximize();
-                    return driver;
                 } else {
                     setBrowser(browser);
                     DriverManagerType driverManagerType = DriverManagerType.valueOf(getBrowser().toUpperCase());
@@ -44,7 +43,6 @@ class Singletone {
                     WebDriverManager.getInstance(driverManagerType).setup();
                     driver = (WebDriver) driverClass.newInstance();
                     driver.manage().window().maximize();
-                    return driver;
                 }
             }
 
@@ -63,45 +61,4 @@ class Singletone {
         return driver;
     }
 
-
-    //for Xpath
-    public void waitTo(int seconds, String xpath) {
-        new WebDriverWait(getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
-    }
-
-    //for SccSelector
-    public void waitTo(String cssSelector, int seconds) {
-        new WebDriverWait(getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(cssSelector)));
-    }
-
-    //for implicit wait
-    public void implicitWait(int seconds) {
-        getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(seconds));
-
-    }
-
-    int returnInInt(String str) {
-        int result;
-        String temp;
-        String delimetr = "\n";
-        String[] masStr1 = str.split(delimetr);
-
-
-        temp = masStr1[1];
-        String[] masStr2 = temp.split(",");
-        temp = masStr2[0] + masStr2[1] + masStr2[2];
-        result = Integer.parseInt(temp);
-        return result;
-    }
-
-    void tearDown() {
-        getDriver().quit();
-    }
-
-    String correctPrice(String element) {
-        String price;
-        String[] temp = element.split(" ", 2);
-        price = temp[0];
-        return price;
-    }
 }

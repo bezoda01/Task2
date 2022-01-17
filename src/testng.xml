@@ -12,4 +12,18 @@
         </classes>
     </test>
 
+    <test name="Test2">
+        <classes>
+
+        </classes>
+    </test>
+
+    <test name="Test3">
+        <classes>
+
+        </classes>
+    </test>
+
+
+
 </suite>

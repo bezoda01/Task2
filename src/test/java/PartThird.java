@@ -6,13 +6,17 @@ import org.testng.annotations.Test;
 public class PartThird extends Singletone{
     private MainPage mainPage;
     private TradingPage tradingPage;
+    private PerformIs performIs;
+
 
     @BeforeTest
     void setUp() {
         getDriver("chrome");
 
-        mainPage = new MainPage();
-        tradingPage = new TradingPage();
+        mainPage = new MainPage(getDriver());
+        tradingPage = new TradingPage(getDriver());
+        performIs = new PerformIs();
+
     }
 
     @Test
@@ -46,6 +50,6 @@ public class PartThird extends Singletone{
 
     @AfterTest
     void quit() {
-        tearDown();
+        performIs.tearDown();
     }
 }
