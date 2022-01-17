@@ -9,6 +9,8 @@ public class PartThird extends Singletone{
 
     @BeforeTest
     void setUp() {
+        getDriver("chrome");
+
         mainPage = new MainPage();
         tradingPage = new TradingPage();
     }

@@ -10,6 +10,8 @@ public class PartSecond extends Singletone {
 
     @BeforeTest
     void setUp() {
+        getDriver("chrome");
+
         mainPage = new MainPage();
         topSellersPage = new TopSellersPage();
         gamePage = new GamePage();

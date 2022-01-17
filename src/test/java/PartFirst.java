@@ -31,6 +31,4 @@ public class PartFirst extends Singletone{
     void quit() {
         tearDown();
     }
-
-
 }
