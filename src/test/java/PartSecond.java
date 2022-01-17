@@ -13,8 +13,6 @@ public class PartSecond extends Singletone {
         mainPage = new MainPage();
         topSellersPage = new TopSellersPage();
         gamePage = new GamePage();
-
-        createInstance("chrome");
     }
 
     @Test

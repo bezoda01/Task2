@@ -1,8 +1,10 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -12,46 +14,85 @@ class Singletone {
 
     private static WebDriver driver;
 
+    public String getBrowser() {
+        return browser;
+    }
+
+    public void setBrowser(String browser) {
+        this.browser = browser;
+    }
+
+    private String browser;
+
+
     public void setDriverClass(Class<?> driverClass) {
         this.driverClass = driverClass;
     }
 
     private Class<?> driverClass;
 
-    public WebDriver getDriver() {
+    public WebDriver getDriver(String browser) {
+        setBrowser(browser);
+        try {
+            if (driver == null) { //если объект ещё не создан
 
-        if (driver == null) { //если объект ещё не создан
-            try {
-                driver = (WebDriver) driverClass.newInstance();//создать новый объект
-            } catch (InstantiationException | IllegalAccessException e) {
+
+                if (getBrowser().equals("chrome")) {
+                    ChromeOptions options = new ChromeOptions();
+                    options.addArguments("--incognito");
+                    WebDriverManager.chromedriver().setup();
+                    driver = new ChromeDriver(options);
+                    driver.manage().window().maximize();
+                    return driver;
+                } else {
+                    setBrowser(browser);
+                    DriverManagerType driverManagerType = DriverManagerType.valueOf(getBrowser().toUpperCase());
+                    Class<?> driverClass = Class.forName(driverManagerType.browserClass());
+                    setDriverClass(Class.forName(driverManagerType.browserClass()));
+                    WebDriverManager.getInstance(driverManagerType).setup();
+                    driver = (WebDriver) driverClass.newInstance();//создать новый объект
+                    driver.manage().window().maximize();
+                    return driver;
+                }
+            }
+
+            } catch(InstantiationException | IllegalAccessException | ClassNotFoundException e){
                 e.printStackTrace();
             }
+        return driver;
         }
-        return driver;//вернуть объект
-    }
 
 
-    public WebDriver createInstance(String browser) {
 
-        try {
-
-            DriverManagerType driverManagerType = DriverManagerType.valueOf(browser.toUpperCase());
-            Class<?> driverClass = Class.forName(driverManagerType.browserClass());
-
-            setDriverClass(Class.forName(driverManagerType.browserClass()));
-
-            WebDriverManager.getInstance(driverManagerType).setup();
-            driver = (WebDriver) driverClass.newInstance();
-            driver.manage().window().maximize();
-
-
-        } catch (IllegalAccessException | ClassNotFoundException e) {
-            // exception or log for class not found
-        } catch (InstantiationException e) {
-            // exception to log for instantiation problem
+    public WebDriver getDriver() {
+        if(driver == null) {
+            driver = getDriver(getBrowser());
         }
         return driver;
     }
+
+
+//    public void createInstance(String browser) {
+//
+//        try {
+//
+//            DriverManagerType driverManagerType = DriverManagerType.valueOf(browser.toUpperCase());
+//            Class<?> driverClass = Class.forName(driverManagerType.browserClass());
+//
+//            setDriverClass(Class.forName(driverManagerType.browserClass()));
+//            WebDriverManager.getInstance(driverManagerType).setup();
+////            driver = (WebDriver) driverClass.newInstance();
+////            driver.manage().window().maximize();
+//
+//
+//
+//        } catch (IllegalAccessException | ClassNotFoundException e) {
+//            // exception or log for class not found
+//        } catch (InstantiationException e) {
+//            // exception to log for instantiation problem
+//        }
+////        return driver;
+//    }
 
     //for Xpath
     public void waitTo(int seconds, String xpath) {
@@ -89,7 +130,7 @@ class Singletone {
 
     String correctPrice(String element) {
         String price;
-        String[] temp = element.split(" ",2);
+        String[] temp = element.split(" ", 2);
         price = temp[0];
         return price;
     }
