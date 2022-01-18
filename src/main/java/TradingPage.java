@@ -17,7 +17,36 @@ public class TradingPage extends PerformIs {
 
     private By search = By.id("advancedSearchBox");
 
-    ArrayList<String> firstFive = new ArrayList<>();
+    private By GameInPool = By.id("app_option_570");
+
+    private By clickGameInPool = By.id("app_option_0_selected");
+
+    private By firstLot = By.id("result_0_name");
+
+    private By selectedHero = By.xpath("//select[@name='category_570_Hero[]']");
+
+    private By heroLifestealer = By.xpath("//option[@value = 'tag_npc_dota_hero_life_stealer']");
+
+    private By rarityImortal = By.id("tag_570_Rarity_Rarity_Immortal");
+
+    private By poolSearch = By.xpath("//div[@onclick]//span[contains(text(),'Поиск')]");
+
+    private By numbersResultBefore = By.id("searchResults_total");
+
+    private By numbersResultAfter = By.id("searchResults_total");
+
+    private By iconRemoveGolden = By.xpath("//*[contains(text(),'golden')]//span");
+
+    private By iconRemoveDota = By.xpath("//a[@href][1]/span");
+
+    private By firstLotName = By.id("result_0_name");
+
+    private By heroInLot = By.xpath("//*[contains(text(),'Lifestealer')]//span/..");
+
+    private By rarityInLot = By.xpath("//*[contains(text(),'Immortal')]//span/..");
+
+    private ArrayList<String> firstFive = new ArrayList<>();
+
     ArrayList<String> filter;
     int numbersResultsBefore;
     int numbersResultsAfter;
@@ -29,57 +58,50 @@ public class TradingPage extends PerformIs {
     ArrayList<String> filterItemAfter;
 
 
-
-    WebElement checkIsOpen() {
-        return driver.findElement(By.xpath("//span[contains(text(),'Активные')]"));
+    boolean checkIsOpen() {
+        return driver.findElement(By.xpath("//span[contains(text(),'Активные')]")).isEnabled();
     }
 
-    WebElement openAdvancedOptions() {
-        return driver.findElement(By.xpath("//span[contains(text(),'Дополнительные')]"));
+    void openAdvancedOptions() {
+        driver.findElement(By.xpath("//span[contains(text(),'Дополнительные')]")).click();
     }
 
-    WebElement checkAdvOpIsOpen() {
-        return driver.findElement(By.xpath("//div[contains(text(),'Поиск')]"));
+    boolean checkAdvOpIsOpen() {
+        return driver.findElement(By.xpath("//div[contains(text(),'Поиск')]")).isEnabled();
     }
 
-    WebElement clickToGameChoice() {
-        return driver.findElement(By.id("app_option_0_selected"));
+    void clickToGameChoice() {
+        driver.findElement(clickGameInPool).click();
     }
 
-    WebElement choiceGame() {
-        return driver.findElement(By.id("app_option_570"));
+    void choiceGame() {
+        driver.findElement(GameInPool).click();
     }
 
     void clickToSelectHero() {
-        waitTo(5, "//select[@name='category_570_Hero[]']");
-        WebElement selectHero = driver.findElement(By.xpath("//select[@name='category_570_Hero[]']"));
-        selectHero.click();
+        waitTo(5, selectedHero);
+        findByXpath(selectedHero).click();
     }
 
     void selectLifeStealer() {
-        waitTo(5, "//option[@value = 'tag_npc_dota_hero_life_stealer']");
-        WebElement lifeStealer = driver.findElement(By.xpath("//option[@value = 'tag_npc_dota_hero_life_stealer']"));
-        lifeStealer.click();
+        waitTo(5, heroLifestealer);
+        findByXpath(heroLifestealer).click();
     }
 
     void clickAndInput(String input) {
         Actions actions = new Actions(driver);
-        actions.doubleClick(driver.findElement(search)).sendKeys(input).release().build().perform();
+        actions.doubleClick(findById(search)).sendKeys(input).release().build().perform();
     }
 
     void clickRarityAndSearch() {
-        WebElement immortal = driver.findElement(By.id("tag_570_Rarity_Rarity_Immortal"));
-        Actions actions = new Actions(driver);
-        actions.click(immortal).release().build().perform();
-        clickSearch().click();
-    }
 
-    WebElement clickSearch() {
-        return driver.findElement(By.xpath("//div[@onclick]//span[contains(text(),'Поиск')]"));
+        Actions actions = new Actions(driver);
+        actions.click(findById(rarityImortal)).release().build().perform();
+        findByXpath(poolSearch).click();
     }
 
     void setFilterArr() {
-        filter = new ArrayList<String>(){{
+        filter = new ArrayList<String>() {{
             add("//*[contains(text(),'Dota 2')]");
             add("//*[contains(text(),'Lifestealer')]");
             add("//*[contains(text(),'Immortal')]");
@@ -89,6 +111,7 @@ public class TradingPage extends PerformIs {
     }
 
     boolean methodInfoFirstFive() {
+        waitTo(By.id("result_0_name"), 5);
 
         int counter = 0;
         for (int i = 0; i < 5; i++) {
@@ -97,37 +120,36 @@ public class TradingPage extends PerformIs {
             Collections.addAll(firstFive, tempMass);
         }
         for (String s : firstFive) {
-            if(s.equals("Golden")) {
+            if (s.equals("Golden")) {
                 counter++;
             }
         }
         return counter == 5;
     }
 
-    WebElement returnElement(String element) {
-        return driver.findElement(By.xpath(element));
+    boolean returnElement(String element) {
+        return findByXpath(element).isEnabled();
     }
 
     void removeIcons() {
-        numbersResultsBefore = Integer.parseInt(driver.findElement(By.id("searchResults_total")).getText());
-        WebElement goldenRemove = driver.findElement(By.xpath("//*[contains(text(),'golden')]//span"));
-        goldenRemove.click();
-        WebElement dotaRemove = driver.findElement(By.xpath("//a[@href][1]/span"));
-        dotaRemove.click();
-        numbersResultsAfter = Integer.parseInt(driver.findElement(By.id("searchResults_total")).getText());
+        numbersResultsBefore = Integer.parseInt(findById(numbersResultBefore).getText());
+        findByXpath(iconRemoveGolden).click();
+
+        findByXpath(iconRemoveDota).click();
+        numbersResultsAfter = Integer.parseInt(findById(numbersResultAfter).getText());
     }
 
-    WebElement clickToItem() {
+    void clickToItem() {
         filterItemBefore = new ArrayList<String>() {{
-            add(driver.findElement(By.id("result_0_name")).getText());
-            add(driver.findElement(By.xpath("//*[contains(text(),'Lifestealer')]//span/..")).getText());
-            add(driver.findElement(By.xpath("//*[contains(text(),'Immortal')]//span/..")).getText());
+            add(findById(firstLotName).getText());
+            add(findByXpath(heroInLot).getText());
+            add(findByXpath(rarityInLot).getText());
         }};
-        firstItemName = driver.findElement(By.id("result_0_name"));
-        return firstItemName;
+        findById(firstLot).click();
     }
 
     void getInfoAboutItem() {
+
         waitTo(5, "//div[contains(text(),'Lifestealer')]");
         String tempHero = driver.findElement(By.xpath("//div[contains(text(),'Lifestealer')]")).getText();
         String[] temp = tempHero.split(" ");
@@ -136,17 +158,12 @@ public class TradingPage extends PerformIs {
         secondItemHero = temp[1];
         getSecondItemRarity = tempRarityMass[1];
         secondItemName = driver.findElement(By.id("largeiteminfo_item_name")).getText();
-        filterItemAfter = new ArrayList<String>(){{
+        filterItemAfter = new ArrayList<String>() {{
             add(secondItemName);
             add(secondItemHero);
             add(getSecondItemRarity);
         }};
     }
-
-
-
-
-
 
 
 }

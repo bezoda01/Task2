@@ -2,26 +2,46 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.*;
 import java.time.Duration;
 
+
 public class PerformIs {
     Singletone singletone = new Singletone();
 
 
-       UtilPage util() throws JsonProcessingException, FileNotFoundException {
+    UtilPage util() throws JsonProcessingException, FileNotFoundException {
         UtilPage utilPage = new UtilPage();
-            writeJSON(utilPage);
-           return readJSON();
+        writeJSON(utilPage);
+        return readJSON();
+    }
+
+    //for xpath
+    public WebElement findByXpath(String xpath) {
+        return singletone.getDriver().findElement(By.xpath(xpath));
+    }
+
+    public WebElement findByXpath(By xpath) {
+        return singletone.getDriver().findElement(xpath);
+    }
+
+    //for id
+    public WebElement findById(By element) {
+        return singletone.getDriver().findElement(element);
     }
 
 
     //for Xpath
     public void waitTo(int seconds, String xpath) {
         new WebDriverWait(singletone.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
+    }
+
+    public void waitTo(int seconds, By xpath) {
+        new WebDriverWait(singletone.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(xpath));
     }
 
     //for SccSelector
@@ -35,9 +55,12 @@ public class PerformIs {
     }
 
     //for implicit wait
-    public void implicitWait(int seconds) {
-        singletone.getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(seconds));
+    public void waitToVisibility(int seconds, By element) {
+        new WebDriverWait(singletone.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.visibilityOfElementLocated(element));
+    }
 
+    public void waitToInvisibility(int seconds, WebElement element) {
+        new WebDriverWait(singletone.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.invisibilityOf(element));
     }
 
     int returnInInt(String str) {
@@ -54,6 +77,10 @@ public class PerformIs {
         return result;
     }
 
+    boolean onlineComparison(String inGames, String online) {
+        return returnInInt(inGames) < returnInInt(online);
+    }
+
     void tearDown() {
         singletone.getDriver().quit();
     }
@@ -65,38 +92,40 @@ public class PerformIs {
         return price;
     }
 
-    private void writeJSON(UtilPage util){
-        GsonBuilder builder= new GsonBuilder();
+    private void writeJSON(UtilPage util) {
+        GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        try (FileWriter writer = new FileWriter("/Users/zenapoznak/IdeaProjects/Task2/src/main/resources/test.json")){
+        try (FileWriter writer = new FileWriter("/Users/zenapoznak/IdeaProjects/Task2/src/main/resources/test.json")) {
             writer.write(gson.toJson(util));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-   private UtilPage readJSON() throws FileNotFoundException {
+    private UtilPage readJSON() throws FileNotFoundException {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         BufferedReader reader = new BufferedReader(new FileReader("/Users/zenapoznak/IdeaProjects/Task2/src/main/resources/test.json"));
-       return gson.fromJson(reader, UtilPage.class);
+        return gson.fromJson(reader, UtilPage.class);
     }
 
 
     static class UtilPage {
+
+        public String getGameName() {
+            return gameName;
+        }
+
+        private String gameName = "Total War: WARHAMMER III";
+
         public String getUrl() {
             return url;
         }
+
         private String url = "https://store.steampowered.com";
-
-
-
 
         UtilPage() {
 
         }
-
-
-
     }
 }
