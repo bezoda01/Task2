@@ -6,24 +6,28 @@ import org.openqa.selenium.interactions.Actions;
 
 public class MainPage extends PerformIs {
 
+    private final By uniqueElement = By.id("home_maincap_v7");
+    private final By about = By.xpath("//a[@class = 'menuitem' and contains(text(),'О STEAM')]");
+
+
     private final WebDriver driver;
 
     MainPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    void goToPage() {
-        driver.get("https://store.steampowered.com");
+    void goToPage(String url) {
+        driver.get(url);
     }
 
     WebElement clickToAbout() {
-        waitTo(5, "//a[contains(text(),'О STEAM')]");
-        return driver.findElement(By.xpath("//a[contains(text(),'О STEAM')]"));
+        waitTo(uniqueElement, 5);
+        return driver.findElement(about);
     }
 
     WebElement isThatMarket() {
-        waitTo(2, "//a[contains(text(),'Ваш магазин')]");
-        return driver.findElement(By.xpath("//a[contains(text(),'Ваш магазин')]"));
+        waitTo(uniqueElement, 5);
+        return driver.findElement(uniqueElement);
     }
 
     void goCursorToNew() {
