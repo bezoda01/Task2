@@ -15,6 +15,8 @@ public class TradingPage extends PerformIs {
         this.driver = driver;
     }
 
+    private By search = By.id("advancedSearchBox");
+
     ArrayList<String> firstFive = new ArrayList<>();
     ArrayList<String> filter;
     int numbersResultsBefore;
@@ -60,10 +62,9 @@ public class TradingPage extends PerformIs {
         lifeStealer.click();
     }
 
-    void clickAndInput() {
-        WebElement search = driver.findElement(By.id("advancedSearchBox"));
+    void clickAndInput(String input) {
         Actions actions = new Actions(driver);
-        actions.doubleClick(search).sendKeys("golden").release().build().perform();
+        actions.doubleClick(driver.findElement(search)).sendKeys(input).release().build().perform();
     }
 
     void clickRarityAndSearch() {
