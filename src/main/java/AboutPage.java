@@ -9,25 +9,20 @@ public class AboutPage extends PerformIs {
         this.driver = driver;
     }
 
-    int returnPlayersInGame() {
-        waitTo(2, "//div[@class = 'online_stat'][2]");
-        String playersInGame = driver.findElement(By.xpath("//div[@class = 'online_stat'][2]")).getText();
-        return returnInInt(playersInGame);
+    private By playersInGame = By.xpath("//div[@class = 'online_stat'][2]");
+    private By playersInOnline = By.xpath("//div[@class = 'online_stat'][1]");
+    private By buttonMarket = By.xpath("//a[@class = 'menuitem supernav' and contains(text(),'МАГАЗИН')]");
+
+    boolean getPlayers() {
+        waitTo(2, playersInGame);
+        waitTo(2, playersInOnline);
+        return onlineComparison(findByXpath(playersInGame).getText(), findByXpath(playersInOnline).getText());
     }
 
-    int returnPlayersInOnline() {
-        waitTo(2, "//div[@class = 'online_stat'][1]");
-        String playersInOnline = driver.findElement(By.xpath("//div[@class = 'online_stat'][1]")).getText();
-        return returnInInt(playersInOnline);
-    }
 
-    boolean onlineComparison() {
-        return returnPlayersInGame() < returnPlayersInOnline();
-    }
-
-    WebElement clickToMarket() {
-        waitTo(2, "//a[@class = 'menuitem supernav' and contains(text(),'МАГАЗИН')]");
-        return driver.findElement(By.xpath("//a[@class = 'menuitem supernav' and contains(text(),'МАГАЗИН')]"));
+    void clickToMarket() {
+        waitTo(2, buttonMarket);
+        findByXpath(buttonMarket).click();
     }
 
 

@@ -15,104 +15,102 @@ public class TopSellersPage extends PerformIs {
 
     public ArrayList<String> infoAboutGameFirst;
 
+    private By blockOs = By.id("os");
 
-    WebElement checkPage() {
-        return driver.findElement(By.cssSelector(".pageheader.full"));
-    }
+    private By blockNunber = By.id("category3");
 
-    WebElement blockOs() {
-        return driver.findElement(By.id("os"));
-    }
+    private By loading = By.id("search_result_container");
 
-    WebElement blockNumber() {
-        return driver.findElement(By.id("category3"));
+    private By unique = By.id("additional_search_options");
 
-    }
+    private By blockLabels = By.id("TagFilter_Container");
 
-    WebElement blockLabels() {
-        return driver.findElement(By.id("TagFilter_Container"));
+
+
+    private By gamesOnDemand = By.xpath("//div[@class = 'search_results_count']");
+    private By gamesNum = By.xpath("//div[@class = 'search_pagination_left']");
+
+
+    boolean checkPage() {
+        return findById(unique).isEnabled();
     }
 
     void checkBlockOsIsOpen() {
-        WebElement typeOs = driver.findElement(By.xpath("//div[contains(text(),'Операционная')]"));
+        WebElement typeOs = findByXpath("//div[contains(text(),'Операционная')]");
 
-        if (!blockOs().isEnabled()) {
+        if (!findById(blockOs).isEnabled()) {
             typeOs.click();
             waitTo(5, "//span[@data-value = 'linux']//span[@class = 'tab_filter_control_checkbox']");
-            driver.findElement(By.xpath("//span[@data-value = 'linux']//span[@class = 'tab_filter_control_checkbox']")).click();
+            findByXpath("//span[@data-value = 'linux']//span[@class = 'tab_filter_control_checkbox']").click();
         } else {
             waitTo(5, "//span[@data-value = 'linux']//span[@class = 'tab_filter_control_checkbox']");
-            driver.findElement(By.xpath("//span[@data-value = 'linux']//span[@class = 'tab_filter_control_checkbox']")).click();
+            findByXpath("//span[@data-value = 'linux']//span[@class = 'tab_filter_control_checkbox']").click();
         }
     }
 
     void checkBlockCoopIsOpen() {
-        WebElement numberOfPlayers = driver.findElement(By.xpath("//div[contains(text(),'Количество')]"));
+        WebElement numberOfPlayers = findByXpath("//div[contains(text(),'Количество')]");
 
-        if (!blockNumber().isEnabled()) {
+        if (!findById(blockNunber).isEnabled()) {
             JavascriptExecutor executor = (JavascriptExecutor) driver;
             executor.executeScript("arguments[0].click();", numberOfPlayers);
             waitTo(5, "//span[@data-value= '48']//span[@class = 'tab_filter_control_checkbox']");
-            WebElement checkBoxCoop = driver.findElement(By.xpath("//span[@data-value= '48']//span[@class = 'tab_filter_control_checkbox']"));
+            WebElement checkBoxCoop = findByXpath("//span[@data-value= '48']//span[@class = 'tab_filter_control_checkbox']");
             executor.executeScript("arguments[0].click();", checkBoxCoop);
 
         } else {
             waitTo(5, "//span[@data-value= '48']//span[@class = 'tab_filter_control_checkbox']");
-            WebElement checkBoxCoop = driver.findElement(By.xpath("//span[@data-value= '48']//span[@class = 'tab_filter_control_checkbox']"));
+            WebElement checkBoxCoop = findByXpath("//span[@data-value= '48']//span[@class = 'tab_filter_control_checkbox']");
             JavascriptExecutor executor = (JavascriptExecutor) driver;
             executor.executeScript("arguments[0].click();", checkBoxCoop);
         }
     }
 
     void checkBlockLabels() {
-        WebElement genreLabels = driver.findElement(By.xpath("//div[contains(text(),'Метки')]"));
+        WebElement genreLabels = findByXpath("//div[contains(text(),'Метки')]");
 
-        if (!blockLabels().isEnabled()) {
+        if (!findById(blockLabels).isEnabled()) {
             JavascriptExecutor executor = (JavascriptExecutor) driver;
             executor.executeScript("arguments[0].click();", genreLabels);
             waitTo(5, "//span[@data-value= '19']//span[@class = 'tab_filter_control_checkbox']");
-            WebElement checkBoxLabels = driver.findElement(By.xpath("//span[@data-value= '19']//span[@class = 'tab_filter_control_checkbox']"));
+            WebElement checkBoxLabels = findByXpath("//span[@data-value= '19']//span[@class = 'tab_filter_control_checkbox']");
             executor.executeScript("arguments[0].click();", checkBoxLabels);
         } else {
             waitTo(5, "//span[@data-value= '19']//span[@class = 'tab_filter_control_checkbox']");
-            WebElement checkBoxLabels = driver.findElement(By.xpath("//span[@data-value= '19']//span[@class = 'tab_filter_control_checkbox']"));
+            WebElement checkBoxLabels = findByXpath("//span[@data-value= '19']//span[@class = 'tab_filter_control_checkbox']");
             JavascriptExecutor executor = (JavascriptExecutor) driver;
             executor.executeScript("arguments[0].click();", checkBoxLabels);
-            implicitWait(5);
         }
     }
 
 
-    WebElement checkBoxLabels() {
-        return driver.findElement(By.xpath("//span[contains(@class, 'checked') and @data-value = '19']"));
+    boolean checkBoxLabels() {
+        return findByXpath("//span[contains(@class, 'checked') and @data-value = '19']").isEnabled();
     }
 
-    WebElement checkBoxOs() {
-        return driver.findElement(By.xpath("//span[contains(@class, 'checked') and @data-value = 'linux']"));
+    boolean checkBoxOs() {
+        return findByXpath("//span[contains(@class, 'checked') and @data-value = 'linux']").isEnabled();
     }
 
-    WebElement checkBoxCoop() {
-        return driver.findElement(By.xpath("//span[contains(@class, 'checked') and @data-value = '48']"));
+    boolean checkBoxCoop() {
+        return findByXpath("//span[contains(@class, 'checked') and @data-value = '48']").isEnabled();
     }
 
 
     void setInfoAboutGameFirst() {
         infoAboutGameFirst = new ArrayList<String>(){{
-            add(driver.findElement(By.xpath("//a[1]//div//div//span[@class = 'title']")).getText());
-            add(driver.findElement(By.xpath("//a[1]//div//div[contains(@class,'released')]")).getText());
-            add(driver.findElement(By.xpath("//a[1]//div//div[contains(@class,'price')]//div[contains(@class,'price')]")).getText());
+            add(findByXpath("//a[1]//div//div//span[@class = 'title']").getText());
+            add(findByXpath("//a[1]//div//div[contains(@class,'released')]").getText());
+            add(findByXpath("//a[1]//div//div[contains(@class,'price')]//div[contains(@class,'price')]").getText());
         }};
     }
-    WebElement firstGame() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    void firstGame() {
+
+        waitTo(5, "//div[@id = 'search_results_loading' and @style = 'display: none;']");
 
         setInfoAboutGameFirst();
 
-        return driver.findElement(By.xpath("//div[@id = 'search_resultsRows']//a[1]"));
+        findByXpath("//div[@id = 'search_resultsRows']//a[1]").click();
     }
 
 

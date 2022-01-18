@@ -11,25 +11,24 @@ public class GamePage extends PerformIs {
     GamePage(WebDriver driver) {
         this.driver = driver;
     }
+
     public ArrayList<String> infoAboutGameSecond;
 
-    WebElement gameName() {
-        return driver.findElement(By.id("appHubAppName"));
-    }
+    private By nameGame = By.id("appHubAppName");
 
-    WebElement gameReleased() {
-        return driver.findElement(By.xpath("//div[@class = 'date']"));
-    }
+    private By gameReleased = By.xpath("//div[@class = 'date']");
 
-    WebElement gamePrice() {
-        return driver.findElement(By.xpath("//div[@data-price-final = '4699' and contains(text(),'USD')]"));
+    private By gamePrice = By.xpath("//div[@data-price-final = '4699' and contains(text(),'USD')]");
+
+    String gameName() {
+        return findById(nameGame).getText();
     }
 
     ArrayList<String> setInfoAboutGameSecond() {
         infoAboutGameSecond = new ArrayList<String>() {{
-            add(gameName().getText());
-            add(gameReleased().getText());
-            add(correctPrice(gamePrice().getText()));
+            add(findById(nameGame).getText());
+            add(findByXpath(gameReleased).getText());
+            add(correctPrice(findByXpath(gamePrice).getText()));
         }};
         return infoAboutGameSecond;
     }
