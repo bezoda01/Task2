@@ -6,6 +6,10 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 class Singletone {
 
+    public static void setDriver(WebDriver driver) {
+        Singletone.driver = driver;
+    }
+
     private static WebDriver driver;
 
     public String getBrowser() {

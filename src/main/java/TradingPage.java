@@ -50,14 +50,8 @@ public class TradingPage extends PerformIs {
 
     private By heroLot = By.xpath("//div[contains(text(),'Lifestealer')]");
 
-    private ArrayList<String> firstFive = new ArrayList<>();
-
+    ArrayList<String> firstFive = new ArrayList<>();
     ArrayList<String> filter;
-    int numbersResultsBefore;
-    int numbersResultsAfter;
-    String secondItemName;
-    String secondItemHero;
-    String getSecondItemRarity;
     ArrayList<String> filterItemBefore;
     ArrayList<String> filterItemAfter;
 
@@ -115,20 +109,22 @@ public class TradingPage extends PerformIs {
     }
 
     boolean methodInfoFirstFive() throws FileNotFoundException, JsonProcessingException {
-        waitTo(By.id("result_0_name"), 5);
-        return util().infoFirstFiveGolden(firstFive);
+        waitTo(firstLotName, 5);
+        return infoFirstFiveGolden(firstFive);
     }
 
     boolean returnElement(String element) {
         return findByXpath(element).isEnabled();
     }
 
-    void removeIcons() {
-        numbersResultsBefore = Integer.parseInt(findById(numbersResultBefore).getText());
+    boolean removeIcons() {
+        int numbersResultsBefore = Integer.parseInt(findById(numbersResultBefore).getText());
         findByXpath(iconRemoveGolden).click();
 
         findByXpath(iconRemoveDota).click();
-        numbersResultsAfter = Integer.parseInt(findById(numbersResultAfter).getText());
+        int numbersResultsAfter = Integer.parseInt(findById(numbersResultAfter).getText());
+
+        return numbersResultsBefore != numbersResultsAfter;
     }
 
     void clickToItem() {
@@ -140,16 +136,14 @@ public class TradingPage extends PerformIs {
         findById(firstLot).click();
     }
 
-    void getInfoAboutItem() throws FileNotFoundException, JsonProcessingException {
+    void getInfoAboutItem(){
 
         waitTo(5, heroLot);
-        secondItemHero = util().returnString(findById(heroLot).getText());
-        getSecondItemRarity = util().returnString2(findById(rarityInGame).getText());
-        secondItemName = findById(nameHeroInLot).getText();
+
         filterItemAfter = new ArrayList<String>() {{
-            add(secondItemName);
-            add(secondItemHero);
-            add(getSecondItemRarity);
+            add(findById(nameHeroInLot).getText());
+            add(returnString(findById(heroLot).getText()));
+            add(returnString2(findById(rarityInGame).getText()));
         }};
     }
 

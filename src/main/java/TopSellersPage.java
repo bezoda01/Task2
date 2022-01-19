@@ -116,7 +116,7 @@ public class TopSellersPage extends PerformIs {
         waitTo(5, gamesOnDemand);
         List<WebElement> element = driver.findElements(gamesNum);
         waitTo(5, gamesNum);
-        return util().parsToIntFirst(findByXpath(gamesOnDemand).getText()) == element.size();
+        return parsToIntFirst(findByXpath(gamesOnDemand).getText()) == element.size();
     }
 
 
