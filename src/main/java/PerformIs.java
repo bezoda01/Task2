@@ -8,6 +8,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.*;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class PerformIs {
@@ -19,6 +21,7 @@ public class PerformIs {
         writeJSON(utilPage);
         return readJSON();
     }
+
 
     //for xpath
     public WebElement findByXpath(String xpath) {
@@ -63,24 +66,6 @@ public class PerformIs {
         new WebDriverWait(singletone.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.invisibilityOf(element));
     }
 
-    int returnInInt(String str) {
-        int result;
-        String temp;
-        String delimetr = "\n";
-        String[] masStr1 = str.split(delimetr);
-
-
-        temp = masStr1[1];
-        String[] masStr2 = temp.split(",");
-        temp = masStr2[0] + masStr2[1] + masStr2[2];
-        result = Integer.parseInt(temp);
-        return result;
-    }
-
-    boolean onlineComparison(String inGames, String online) {
-        return returnInInt(inGames) < returnInInt(online);
-    }
-
     void tearDown() {
         singletone.getDriver().quit();
     }
@@ -112,6 +97,10 @@ public class PerformIs {
 
     static class UtilPage {
 
+        Singletone singletone =new Singletone();
+
+        PerformIs performIs = new PerformIs();
+
         public String getGameName() {
             return gameName;
         }
@@ -123,6 +112,63 @@ public class PerformIs {
         }
 
         private String url = "https://store.steampowered.com";
+
+
+
+        int parsToIntFirst(String text) {
+            int result;
+            String[] temp1 = text.split(" ");
+            String tempstr1 = temp1[4];
+            String[] temp2 = tempstr1.split("\\.");
+            String tempstr2 = temp2[0];
+
+            return result = Integer.parseInt(tempstr2);
+        }
+
+        String returnString(String hero) {
+            String[] temp = hero.split(" ");
+            return temp[1];
+        }
+
+        String returnString2(String element) {
+            String[] tempRarityMass = element.split(" ");
+            return tempRarityMass[1];
+        }
+
+        boolean infoFirstFiveGolden( ArrayList<String> list) {
+            int counter = 0;
+            for (int i = 0; i < 5; i++) {
+                String temp = singletone.getDriver().findElement(By.id("result_" + i + "_name")).getText();
+                String[] tempMass = temp.split(" ");
+                Collections.addAll(list, tempMass);
+            }
+            for (String s : list) {
+                if (s.equals("Golden")) {
+                    counter++;
+                }
+            }
+            return counter == 5;
+        }
+
+
+
+        int returnInInt(String str) {
+            int result;
+            String temp;
+            String delimetr = "\n";
+            String[] masStr1 = str.split(delimetr);
+
+
+            temp = masStr1[1];
+            String[] masStr2 = temp.split(",");
+            temp = masStr2[0] + masStr2[1] + masStr2[2];
+            result = Integer.parseInt(temp);
+            return result;
+        }
+
+        boolean onlineComparison(String inGames, String online) {
+            return returnInInt(inGames) < returnInInt(online);
+        }
 
         UtilPage() {
 

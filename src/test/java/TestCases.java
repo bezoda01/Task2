@@ -59,7 +59,7 @@ public class TestCases extends Singletone{
         Assert.assertTrue(topSellersPage.checkBoxCoop(), "No search item selected");
         topSellersPage.checkBlockLabels();
         Assert.assertTrue(topSellersPage.checkBoxLabels(), "No search item selected");
-
+        Assert.assertTrue(topSellersPage.checkNumResult(), "number result is different");
         topSellersPage.firstGame();
         Assert.assertEquals(gamePage.gameName(), performIs.util().getGameName() , "Current page was not open");
         Assert.assertEquals(topSellersPage.infoAboutGameFirst, gamePage.setInfoAboutGameSecond(), "Game info is different");

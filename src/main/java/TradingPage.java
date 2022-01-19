@@ -1,11 +1,10 @@
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
-import java.util.Collections;
 
 public class TradingPage extends PerformIs {
 
@@ -45,12 +44,17 @@ public class TradingPage extends PerformIs {
 
     private By rarityInLot = By.xpath("//*[contains(text(),'Immortal')]//span/..");
 
+    private By rarityInGame = By.id("largeiteminfo_item_type");
+
+    private By nameHeroInLot = By.id("largeiteminfo_item_name");
+
+    private By heroLot = By.xpath("//div[contains(text(),'Lifestealer')]");
+
     private ArrayList<String> firstFive = new ArrayList<>();
 
     ArrayList<String> filter;
     int numbersResultsBefore;
     int numbersResultsAfter;
-    WebElement firstItemName;
     String secondItemName;
     String secondItemHero;
     String getSecondItemRarity;
@@ -59,15 +63,15 @@ public class TradingPage extends PerformIs {
 
 
     boolean checkIsOpen() {
-        return driver.findElement(By.xpath("//span[contains(text(),'Активные')]")).isEnabled();
+        return findByXpath("//span[contains(text(),'Активные')]").isEnabled();
     }
 
     void openAdvancedOptions() {
-        driver.findElement(By.xpath("//span[contains(text(),'Дополнительные')]")).click();
+        findByXpath("//span[contains(text(),'Дополнительные')]").click();
     }
 
     boolean checkAdvOpIsOpen() {
-        return driver.findElement(By.xpath("//div[contains(text(),'Поиск')]")).isEnabled();
+        return findByXpath("//div[contains(text(),'Поиск')]").isEnabled();
     }
 
     void clickToGameChoice() {
@@ -110,21 +114,9 @@ public class TradingPage extends PerformIs {
 
     }
 
-    boolean methodInfoFirstFive() {
+    boolean methodInfoFirstFive() throws FileNotFoundException, JsonProcessingException {
         waitTo(By.id("result_0_name"), 5);
-
-        int counter = 0;
-        for (int i = 0; i < 5; i++) {
-            String temp = driver.findElement(By.id("result_" + i + "_name")).getText();
-            String[] tempMass = temp.split(" ");
-            Collections.addAll(firstFive, tempMass);
-        }
-        for (String s : firstFive) {
-            if (s.equals("Golden")) {
-                counter++;
-            }
-        }
-        return counter == 5;
+        return util().infoFirstFiveGolden(firstFive);
     }
 
     boolean returnElement(String element) {
@@ -148,16 +140,12 @@ public class TradingPage extends PerformIs {
         findById(firstLot).click();
     }
 
-    void getInfoAboutItem() {
+    void getInfoAboutItem() throws FileNotFoundException, JsonProcessingException {
 
-        waitTo(5, "//div[contains(text(),'Lifestealer')]");
-        String tempHero = driver.findElement(By.xpath("//div[contains(text(),'Lifestealer')]")).getText();
-        String[] temp = tempHero.split(" ");
-        String tempRarity = driver.findElement(By.id("largeiteminfo_item_type")).getText();
-        String[] tempRarityMass = tempRarity.split(" ");
-        secondItemHero = temp[1];
-        getSecondItemRarity = tempRarityMass[1];
-        secondItemName = driver.findElement(By.id("largeiteminfo_item_name")).getText();
+        waitTo(5, heroLot);
+        secondItemHero = util().returnString(findById(heroLot).getText());
+        getSecondItemRarity = util().returnString2(findById(rarityInGame).getText());
+        secondItemName = findById(nameHeroInLot).getText();
         filterItemAfter = new ArrayList<String>() {{
             add(secondItemName);
             add(secondItemHero);
