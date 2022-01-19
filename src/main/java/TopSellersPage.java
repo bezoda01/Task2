@@ -1,9 +1,11 @@
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TopSellersPage extends PerformIs {
     private final WebDriver driver;
@@ -12,8 +14,7 @@ public class TopSellersPage extends PerformIs {
         this.driver = driver;
     }
 
-
-    public ArrayList<String> infoAboutGameFirst;
+    ArrayList<String> infoAboutGameFirst;
 
     private By blockOs = By.id("os");
 
@@ -25,10 +26,25 @@ public class TopSellersPage extends PerformIs {
 
     private By blockLabels = By.id("TagFilter_Container");
 
+    private By checkBoxLabel = By.xpath("//span[contains(@class, 'checked') and @data-value = '19']");
+
+    private By checkBoxOs = By.xpath("//span[contains(@class, 'checked') and @data-value = 'linux']");
+
+    private By checkBoxCoop = By.xpath("//span[contains(@class, 'checked') and @data-value = '48']");
+
+    private By loadingStyle = By.xpath("//div[@id = 'search_results_loading' and @style = 'display: none;']");
+
+    private By firstGameInList = By.xpath("//div[@id = 'search_resultsRows']//a[1]");
+
+    private By firstGameTitle = By.xpath("//a[1]//div//div//span[@class = 'title']");
+
+    private By firstGameReleased = By.xpath("//a[1]//div//div[contains(@class,'released')]");
+
+    private By firstGamePrice = By.xpath("//a[1]//div//div[contains(@class,'price')]//div[contains(@class,'price')]");
 
 
     private By gamesOnDemand = By.xpath("//div[@class = 'search_results_count']");
-    private By gamesNum = By.xpath("//div[@class = 'search_pagination_left']");
+    private By gamesNum = By.xpath("//a[@data-gpnav = 'item']");
 
 
     boolean checkPage() {
@@ -85,32 +101,40 @@ public class TopSellersPage extends PerformIs {
 
 
     boolean checkBoxLabels() {
-        return findByXpath("//span[contains(@class, 'checked') and @data-value = '19']").isEnabled();
+        return findByXpath(checkBoxLabel).isEnabled();
     }
 
     boolean checkBoxOs() {
-        return findByXpath("//span[contains(@class, 'checked') and @data-value = 'linux']").isEnabled();
+        return findByXpath(checkBoxOs).isEnabled();
     }
 
     boolean checkBoxCoop() {
-        return findByXpath("//span[contains(@class, 'checked') and @data-value = '48']").isEnabled();
+        return findByXpath(checkBoxCoop).isEnabled();
+    }
+
+    boolean checkNumResult() throws FileNotFoundException, JsonProcessingException {
+        waitTo(5, gamesOnDemand);
+        List<WebElement> element = driver.findElements(gamesNum);
+        waitTo(5, gamesNum);
+        return util().parsToIntFirst(findByXpath(gamesOnDemand).getText()) == element.size();
     }
 
 
-    void setInfoAboutGameFirst() {
-        infoAboutGameFirst = new ArrayList<String>(){{
-            add(findByXpath("//a[1]//div//div//span[@class = 'title']").getText());
-            add(findByXpath("//a[1]//div//div[contains(@class,'released')]").getText());
-            add(findByXpath("//a[1]//div//div[contains(@class,'price')]//div[contains(@class,'price')]").getText());
+    void setInfoAboutGameFirst() throws FileNotFoundException, JsonProcessingException {
+        infoAboutGameFirst = new ArrayList<String>() {{
+            add(findByXpath(firstGameTitle).getText());
+            add(findByXpath(firstGameReleased).getText());
+            add(findByXpath(firstGamePrice).getText());
         }};
     }
-    void firstGame() {
 
-        waitTo(5, "//div[@id = 'search_results_loading' and @style = 'display: none;']");
+    void firstGame() throws FileNotFoundException, JsonProcessingException {
+
+        waitTo(5, loadingStyle);
 
         setInfoAboutGameFirst();
 
-        findByXpath("//div[@id = 'search_resultsRows']//a[1]").click();
+        findByXpath(firstGameInList).click();
     }
 
 
