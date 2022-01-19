@@ -23,12 +23,11 @@ public class GamePage extends PerformIs {
         return findById(nameGame).getText();
     }
 
-    ArrayList<String> setInfoAboutGameSecond() {
+   void setInfoAboutGameSecond() {
         infoAboutGameSecond = new ArrayList<String>() {{
             add(findById(nameGame).getText());
             add(findByXpath(gameReleased).getText());
             add(correctPrice(findByXpath(gamePrice).getText()));
         }};
-        return infoAboutGameSecond;
     }
 }

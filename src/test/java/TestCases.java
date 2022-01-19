@@ -1,12 +1,8 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.FileNotFoundException;
-import java.util.Locale;
 
 public class TestCases extends Singletone{
     private MainPage mainPage;
@@ -18,8 +14,8 @@ public class TestCases extends Singletone{
     private PerformIs performIs;
 
 
-    @BeforeTest
-    void setUp() throws FileNotFoundException, JsonProcessingException {
+    @BeforeMethod
+    void setUp(){
 
         //first run
         getDriver("chrome");
@@ -29,11 +25,7 @@ public class TestCases extends Singletone{
         gamePage = new GamePage(getDriver());
         topSellersPage = new TopSellersPage(getDriver());
         tradingPage = new TradingPage(getDriver());
-
         performIs = new PerformIs();
-
-
-
     }
 
     @Test
@@ -62,7 +54,8 @@ public class TestCases extends Singletone{
         Assert.assertTrue(topSellersPage.checkNumResult(), "number result is different");
         topSellersPage.firstGame();
         Assert.assertEquals(gamePage.gameName(), performIs.util().getGameName() , "Current page was not open");
-        Assert.assertEquals(topSellersPage.infoAboutGameFirst, gamePage.setInfoAboutGameSecond(), "Game info is different");
+        gamePage.setInfoAboutGameSecond();
+        Assert.assertEquals(topSellersPage.infoAboutGameFirst, gamePage.infoAboutGameSecond, "Game info is different");
     }
 
     @Test
@@ -78,22 +71,22 @@ public class TestCases extends Singletone{
         tradingPage.choiceGame();
         tradingPage.clickToSelectHero();
         tradingPage.selectLifeStealer();
-        tradingPage.clickAndInput("golden");
+        tradingPage.clickAndInput(performIs.util().getGolden());
         tradingPage.clickRarityAndSearch();
         tradingPage.setFilterArr();
         for(String filter : tradingPage.filter) {
             Assert.assertTrue(tradingPage.returnElement(filter), "Element was not select" );
         }
         Assert.assertTrue(tradingPage.methodInfoFirstFive(), "Not all elements have 'Golden'");
-        tradingPage.removeIcons();
-        Assert.assertNotEquals(tradingPage.numbersResultsBefore, tradingPage.numbersResultsAfter, "Filters was not change");
+        Assert.assertTrue(tradingPage.removeIcons(), "Filters was not change");
         tradingPage.clickToItem();
         tradingPage.getInfoAboutItem();
         Assert.assertEquals(tradingPage.filterItemBefore, tradingPage.filterItemAfter, "Filters was not change");
     }
 
-    @AfterTest
+    @AfterMethod
     void quit() {
         performIs.tearDown();
+        setDriver(null);
     }
 }

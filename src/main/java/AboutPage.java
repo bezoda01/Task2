@@ -21,7 +21,7 @@ public class AboutPage extends PerformIs {
     boolean getPlayers() throws FileNotFoundException, JsonProcessingException {
         waitTo(2, playersInGame);
         waitTo(2, playersInOnline);
-        return util().onlineComparison(findByXpath(playersInGame).getText(), findByXpath(playersInOnline).getText());
+        return onlineComparison(findByXpath(playersInGame).getText(), findByXpath(playersInOnline).getText());
     }
 
 
