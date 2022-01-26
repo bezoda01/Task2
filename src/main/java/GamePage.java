@@ -17,7 +17,7 @@ public class GamePage extends PerformIs {
 
     private By gameReleased = By.xpath("//div[@class = 'date']");
 
-    private By gamePrice = By.xpath("//div[@data-price-final = '4699' and contains(text(),'USD')]");
+    private By gamePrice = By.xpath("//div[@class = 'game_purchase_price price']");
 
     String gameName() {
         return findById(nameGame).getText();

@@ -112,7 +112,7 @@ public class TopSellersPage extends PerformIs {
         return findByXpath(checkBoxCoop).isEnabled();
     }
 
-    boolean checkNumResult() throws FileNotFoundException, JsonProcessingException {
+    boolean checkNumResult() {
         waitTo(5, gamesOnDemand);
         List<WebElement> element = driver.findElements(gamesNum);
         waitTo(5, gamesNum);
@@ -120,7 +120,7 @@ public class TopSellersPage extends PerformIs {
     }
 
 
-    void setInfoAboutGameFirst() throws FileNotFoundException, JsonProcessingException {
+    void setInfoAboutGameFirst() {
         infoAboutGameFirst = new ArrayList<String>() {{
             add(findByXpath(firstGameTitle).getText());
             add(findByXpath(firstGameReleased).getText());
@@ -128,7 +128,7 @@ public class TopSellersPage extends PerformIs {
         }};
     }
 
-    void firstGame() throws FileNotFoundException, JsonProcessingException {
+    void firstGame() {
 
         waitTo(5, loadingStyle);
 

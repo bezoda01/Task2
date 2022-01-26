@@ -7,15 +7,15 @@ public class MainPage extends PerformIs {
 
     private By uniqueElement = By.id("home_maincap_v7");
 
-    private By about = By.xpath("//a[@class = 'menuitem' and contains(text(),'О STEAM')]");
+    private By about = By.xpath("//a[contains(text(),'STEAM')]");
 
-    private By newButton = By.xpath("//a[@class = 'pulldown_desktop' and contains(text(),'Новое и примечательное')]");
+    private By newButton = By.id("noteworthy_tab");
 
-    private By leaderOfSells = By.xpath("//a[contains(text(),'Лидеры продаж') and @class = 'popup_menu_item']");
+    private By leaderOfSells = By.cssSelector("a[href*='topsellers'].popup_menu_item");
 
-    private By buttonCommunity = By.xpath("//a[contains(text(),'СООБЩЕСТВО')]");
+    private By buttonCommunity = By.xpath("//div[@class = 'supernav_container']//a[@data-tooltip-content = '.submenu_community']");
 
-    private By commMarket = By.xpath("//a[contains(text(),'Торговая площадка')]");
+    private  By commMarket = By.cssSelector("a.submenuitem[href*='market']");
 
 
     private final WebDriver driver;

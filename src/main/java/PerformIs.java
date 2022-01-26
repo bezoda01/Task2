@@ -1,11 +1,8 @@
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.io.*;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -13,110 +10,80 @@ import java.util.Collections;
 
 
 public class PerformIs {
-
-    public ArrayList<String> getInfoAboutGameSecond() {
-        return infoAboutGameSecond;
-    }
-
-    public ArrayList<String> infoAboutGameSecond;
-
-    void setInfoAboutGameSecond(String name, String released, String price) {
-        infoAboutGameSecond = new ArrayList<String>() {{
-            add(name);
-            add(released);
-            add(price);
-        }};
-    }
-    Singletone singletone = new Singletone();
+    DriverManager driverManager = new DriverManager();
 
 
-    UtilPage util() throws JsonProcessingException, FileNotFoundException {
-        UtilPage utilPage = new UtilPage();
-        writeJSON(utilPage);
-        return readJSON();
+    JSONObject util() throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader("testData.json"))){
+            String file;
+            StringBuilder temp = new StringBuilder();
+            while((file = reader.readLine()) != null) {
+                temp.append(file);
+            }
+            return new JSONObject(temp.toString());
+        }
     }
 
 
     //for xpath
     public WebElement findByXpath(String xpath) {
-        return singletone.getDriver().findElement(By.xpath(xpath));
+        return driverManager.getDriver().findElement(By.xpath(xpath));
     }
 
     public WebElement findByXpath(By xpath) {
-        return singletone.getDriver().findElement(xpath);
+        return driverManager.getDriver().findElement(xpath);
     }
 
     //for id
     public WebElement findById(By element) {
-        return singletone.getDriver().findElement(element);
+        return driverManager.getDriver().findElement(element);
     }
 
 
     //for Xpath
     public void waitTo(int seconds, String xpath) {
-        new WebDriverWait(singletone.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
+        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
     }
 
     public void waitTo(int seconds, By xpath) {
-        new WebDriverWait(singletone.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(xpath));
+        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(xpath));
     }
 
     //for SccSelector
     public void waitTo(String cssSelector, int seconds) {
-        new WebDriverWait(singletone.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(cssSelector)));
+        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(cssSelector)));
     }
 
     //for id
     public void waitTo(By idElement, int seconds) {
-        new WebDriverWait(singletone.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(idElement));
+        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(idElement));
     }
 
     //for implicit wait
     public void waitToVisibility(int seconds, By element) {
-        new WebDriverWait(singletone.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.visibilityOfElementLocated(element));
+        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.visibilityOfElementLocated(element));
     }
 
     public void waitToInvisibility(int seconds, WebElement element) {
-        new WebDriverWait(singletone.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.invisibilityOf(element));
-    }
-
-    void tearDown() {
-        singletone.getDriver().quit();
+        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.invisibilityOf(element));
     }
 
     String correctPrice(String element) {
         String price;
-        String[] temp = element.split(" ", 2);
+        String[] temp = element.split(" ");
         price = temp[0];
         return price;
     }
 
-    private void writeJSON(UtilPage util) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        try (FileWriter writer = new FileWriter("/Users/zenapoznak/IdeaProjects/Task2/src/main/resources/test.json")) {
-            writer.write(gson.toJson(util));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private UtilPage readJSON() throws FileNotFoundException {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        BufferedReader reader = new BufferedReader(new FileReader("/Users/zenapoznak/IdeaProjects/Task2/src/main/resources/test.json"));
-        return gson.fromJson(reader, UtilPage.class);
-    }
-
 
     int parsToIntFirst(String text) {
-        int result;
+        
         String[] temp1 = text.split(" ");
         String tempstr1 = temp1[4];
         String[] temp2 = tempstr1.split("\\.");
         String tempstr2 = temp2[0];
 
-        return result = Integer.parseInt(tempstr2);
+        return Integer.parseInt(tempstr2);
     }
 
     String returnString(String hero) {
@@ -132,7 +99,7 @@ public class PerformIs {
     boolean infoFirstFiveGolden( ArrayList<String> list) {
         int counter = 0;
         for (int i = 0; i < 5; i++) {
-            String temp = singletone.getDriver().findElement(By.id("result_" + i + "_name")).getText();
+            String temp = driverManager.getDriver().findElement(By.id("result_" + i + "_name")).getText();
             String[] tempMass = temp.split(" ");
             Collections.addAll(list, tempMass);
         }
@@ -164,32 +131,4 @@ public class PerformIs {
         return returnInInt(inGames) < returnInInt(online);
     }
 
-
-
-
-    static class UtilPage {
-
-        public String getGolden() {
-            return golden;
-        }
-
-        private String golden = "golden";
-
-
-        public String getGameName() {
-            return gameName;
-        }
-
-        private String gameName = "Total War: WARHAMMER III";
-
-        public String getUrl() {
-            return url;
-        }
-
-        private String url = "https://store.steampowered.com";
-
-        UtilPage() {
-
-        }
-    }
 }
