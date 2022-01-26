@@ -4,11 +4,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-class Singletone {
+import java.io.IOException;
+
+class DriverManager {
 
     public static void setDriver(WebDriver driver) {
-        Singletone.driver = driver;
+        DriverManager.driver = driver;
     }
+
+
 
     private static WebDriver driver;
 
@@ -22,8 +26,7 @@ class Singletone {
 
     private String browser;
 
-    public WebDriver getDriver(String browser) {
-        setBrowser(browser);
+    public WebDriver getDriver() {
         try {
             if (driver == null) { //если объект ещё не создан
 
@@ -31,6 +34,7 @@ class Singletone {
                 if (getBrowser().equals("chrome")) {
                     ChromeOptions options = new ChromeOptions();
                     options.addArguments("--incognito");
+                    options.addArguments("--lang=en-GB");
                     WebDriverManager.chromedriver().setup();
                     driver = new ChromeDriver(options);
                     driver.manage().window().maximize();
@@ -50,13 +54,8 @@ class Singletone {
         return driver;
         }
 
-
-
-    public WebDriver getDriver() {
-        if(driver == null) {
-            driver = getDriver(getBrowser());
-        }
-        return driver;
+    public void driverQuit() {
+        driver.quit();
+        setDriver(null);
     }
-
 }
