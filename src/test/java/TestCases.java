@@ -12,7 +12,6 @@ public class TestCases {
     private GamePage gamePage;
     private TopSellersPage topSellersPage;
     private TradingPage tradingPage;
-    private PerformIs performIs;
     private DriverManager driverManager;
     public Game gameFirst;
     public Game gameSecond;
@@ -24,7 +23,6 @@ public class TestCases {
     @BeforeMethod
     void setUp() throws IOException {
         driverManager = new DriverManager();
-        //first run
         driverManager.setBrowser("chrome");
         driverManager.chromeOptions("incognito", "english");
 
@@ -33,12 +31,11 @@ public class TestCases {
         gamePage = new GamePage(driverManager.getDriver());
         topSellersPage = new TopSellersPage(driverManager.getDriver());
         tradingPage = new TradingPage(driverManager.getDriver());
-        performIs = new PerformIs();
     }
 
-    @Test(priority = 3)
+    @Test
     void comparePlayers() throws IOException {
-        mainPage.goToPage(performIs.util().getString("url"));
+        mainPage.goToPage(PerformIs.utilConfig().getString("url"));
         Assert.assertTrue(mainPage.isThisPage(), "Page was not open");
         mainPage.clickToAbout();
         Assert.assertTrue(aboutPage.getPlayers(), "The number of players is now more than online");
@@ -46,9 +43,9 @@ public class TestCases {
         Assert.assertTrue(mainPage.isThatMarket(), "Market Page was not open");
     }
 
-    @Test(priority = 2)
+    @Test
     void checkGameInformation() throws IOException {
-        mainPage.goToPage(performIs.util().getString("url"));
+        mainPage.goToPage(PerformIs.utilConfig().getString("url"));
         Assert.assertTrue(mainPage.isThisPage(),"Current page was not open");
         mainPage.goCursorToNew();
         mainPage.clickToLeader();
@@ -62,16 +59,16 @@ public class TestCases {
         Assert.assertTrue(topSellersPage.checkNumResult(), "number result is different");
         gameFirst = topSellersPage.returnGameInfoFirst();
         topSellersPage.firstGame();
-        Assert.assertEquals(gamePage.gameName(), performIs.util().getString("gameName") , "Current page was not open");
+        Assert.assertEquals(gamePage.gameName(), PerformIs.utilData().getString("gameName") , "Current page was not open");
         gameSecond = gamePage.returnGameInfoSecond();
         Assert.assertEquals(gameFirst.getName(), gameSecond.getName(), "Game info is different");
         Assert.assertEquals(gameFirst.getGameReleased(), gameSecond.getGameReleased(), "Game info is different");
         Assert.assertEquals(gameFirst.getPrice(), gameSecond.getPrice(), "Game info is different");
     }
 
-    @Test(priority = 1)
+    @Test
     void checkProductInformation() throws IOException {
-        mainPage.goToPage(performIs.util().getString("url"));
+        mainPage.goToPage(PerformIs.utilConfig().getString("url"));
         Assert.assertTrue(mainPage.isThisPage(), "Current page was not open");
         mainPage.moveToCommunity();
         mainPage.clickToComMarket();

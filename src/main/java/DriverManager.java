@@ -73,8 +73,8 @@ class DriverManager {
     public void chromeOptions(String incognito, String language) throws IOException {
         ChromeOptions options = new ChromeOptions();
         Map<String, Object> prefs = new HashMap<>();
-        prefs.put("intl.accept_languages", PerformIs.util().getString(language));
-        options.addArguments(PerformIs.util().getString(incognito));
+        prefs.put("intl.accept_languages", PerformIs.utilConfig().getString(language));
+        options.addArguments(PerformIs.utilConfig().getString(incognito));
 //        options.addArguments(PerformIs.util().getString(incognito), PerformIs.util().getString(language));
         options.setExperimentalOption("prefs", prefs);
         options.setCapability(ChromeOptions.CAPABILITY, options);

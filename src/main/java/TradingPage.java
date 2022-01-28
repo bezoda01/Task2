@@ -52,7 +52,7 @@ public class TradingPage {
     }
 
     void choiceGame(String game) throws IOException {
-        By temp = By.id(PerformIs.util().getString(game));
+        By temp = By.id(PerformIs.utilData().getString(game));
         performIs.findById(temp).click();
     }
 
@@ -62,7 +62,7 @@ public class TradingPage {
     }
 
     void selectHero(String hero) throws IOException {
-        heroName = By.xpath(PerformIs.util().getString(hero));
+        heroName = By.xpath(PerformIs.utilData().getString(hero));
         performIs.waitTo(heroName);
         performIs.findByXpath(heroName).click();
     }
@@ -74,7 +74,7 @@ public class TradingPage {
     }
 
     void clickRarityAndSearch(String rarity) throws IOException {
-        rarityImortal = By.id(PerformIs.util().getString(rarity));
+        rarityImortal = By.id(PerformIs.utilData().getString(rarity));
         Actions actions = new Actions(driver);
         actions.click(performIs.findById(rarityImortal)).release().build().perform();
         performIs.findByXpath(poolSearch).click();
