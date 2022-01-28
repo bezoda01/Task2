@@ -15,8 +15,19 @@ public class PerformIs {
     private final int SECONDS = 5;
 
 
-    static JSONObject util() throws IOException {
+    static JSONObject utilData() throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader("testData.json"))){
+            String file;
+            StringBuilder temp = new StringBuilder();
+            while((file = reader.readLine()) != null) {
+                temp.append(file);
+            }
+            return new JSONObject(temp.toString());
+        }
+    }
+
+    static JSONObject utilConfig() throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader("testConfig.json"))){
             String file;
             StringBuilder temp = new StringBuilder();
             while((file = reader.readLine()) != null) {

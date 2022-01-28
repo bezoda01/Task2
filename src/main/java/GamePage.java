@@ -1,12 +1,8 @@
-import DataClasses.Classes;
 import DataClasses.Game;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-import java.util.ArrayList;
-
 public class GamePage {
-    Classes classes = new Classes();
 
     private final WebDriver driver;
     PerformIs util = new PerformIs();
@@ -25,7 +21,6 @@ public class GamePage {
 
 
     Game returnGameInfoSecond() {
-
         return new Game(
                 util.findById(nameGame).getText(),
                 util.findByXpath(gameReleased).getText(),

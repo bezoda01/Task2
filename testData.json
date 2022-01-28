@@ -1,11 +1,5 @@
 {
 
-  "incognito": "--incognito",
-  "url": "https://store.steampowered.com",
-  "english": "-lang=en",
-  "russian": "-lang=ru",
-
-
   "gameName": "Total War: WARHAMMER III",
 
   "dota2": "app_option_570",

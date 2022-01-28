@@ -21,7 +21,6 @@ public class TopSellersPage {
     private By checkBoxLabel = By.xpath("//span[contains(@class, 'checked') and @data-value = '19']");
     private By checkBoxOs = By.xpath("//span[contains(@class, 'checked') and @data-value = 'linux']");
     private By checkBoxCoop = By.xpath("//span[contains(@class, 'checked') and @data-value = '48']");
-    private By loadingStyle = By.xpath("//div[@id = 'search_results_loading' and @style = 'display: none;']");
     private By firstGameInList = By.xpath("//div[@id = 'search_resultsRows']//a[1]");
     private By firstGameTitle = By.xpath("//a[1]//div//div//span[@class = 'title']");
     private By firstGameReleased = By.xpath("//a[1]//div//div[contains(@class,'released')]");
@@ -110,8 +109,6 @@ public class TopSellersPage {
     }
 
     void firstGame() {
-
-//        util.waitTo(loadingStyle);
 
         util.findByXpath(firstGameInList).click();
     }
