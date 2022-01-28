@@ -12,8 +12,10 @@ import java.util.Collections;
 public class PerformIs {
     DriverManager driverManager = new DriverManager();
 
+    private final int SECONDS = 5;
 
-    JSONObject util() throws IOException {
+
+    static JSONObject util() throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader("testData.json"))){
             String file;
             StringBuilder temp = new StringBuilder();
@@ -27,46 +29,26 @@ public class PerformIs {
 
     //for xpath
     public WebElement findByXpath(String xpath) {
+        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(SECONDS)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
         return driverManager.getDriver().findElement(By.xpath(xpath));
     }
 
     public WebElement findByXpath(By xpath) {
+        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(SECONDS)).until(ExpectedConditions.presenceOfElementLocated(xpath));
         return driverManager.getDriver().findElement(xpath);
     }
 
     //for id
     public WebElement findById(By element) {
+        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(SECONDS)).until(ExpectedConditions.presenceOfElementLocated(element));
         return driverManager.getDriver().findElement(element);
     }
 
-
-    //for Xpath
-    public void waitTo(int seconds, String xpath) {
-        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
+    public void waitTo(By locator) {
+        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(SECONDS)).until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
-    public void waitTo(int seconds, By xpath) {
-        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(xpath));
-    }
 
-    //for SccSelector
-    public void waitTo(String cssSelector, int seconds) {
-        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(cssSelector)));
-    }
-
-    //for id
-    public void waitTo(By idElement, int seconds) {
-        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.presenceOfElementLocated(idElement));
-    }
-
-    //for implicit wait
-    public void waitToVisibility(int seconds, By element) {
-        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.visibilityOfElementLocated(element));
-    }
-
-    public void waitToInvisibility(int seconds, WebElement element) {
-        new WebDriverWait(driverManager.getDriver(), Duration.ofSeconds(seconds)).until(ExpectedConditions.invisibilityOf(element));
-    }
 
     String correctPrice(String element) {
         String price;
@@ -76,27 +58,38 @@ public class PerformIs {
     }
 
 
-    int parsToIntFirst(String text) {
-        
-        String[] temp1 = text.split(" ");
-        String tempstr1 = temp1[4];
-        String[] temp2 = tempstr1.split("\\.");
-        String tempstr2 = temp2[0];
+    boolean parsToIntFirst(String text, String intSize) {
 
-        return Integer.parseInt(tempstr2);
+        boolean answer = false;
+
+        String[] temp1 = text.split("\\.");
+
+        String tempstr1 = temp1[0];
+
+        String[] temp2 = tempstr1.split(" ");
+        for (String s : temp2) {
+            if (s.equals(intSize)) {
+                answer = true;
+                break;
+            }
+        }
+        return answer;
     }
 
     String returnString(String hero) {
         String[] temp = hero.split(" ");
-        return temp[1];
+        return temp[2];
     }
 
+    //Used By: Lifestealer
+    //Используется: Lifestealer
     String returnString2(String element) {
         String[] tempRarityMass = element.split(" ");
-        return tempRarityMass[1];
+        return tempRarityMass[0];
     }
 
-    boolean infoFirstFiveGolden( ArrayList<String> list) {
+    boolean infoFirstFiveGolden() {
+        ArrayList<String> list = new ArrayList<>();
         int counter = 0;
         for (int i = 0; i < 5; i++) {
             String temp = driverManager.getDriver().findElement(By.id("result_" + i + "_name")).getText();
@@ -110,7 +103,6 @@ public class PerformIs {
         }
         return counter == 5;
     }
-
 
 
     int returnInInt(String str) {
