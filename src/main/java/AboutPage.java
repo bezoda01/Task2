@@ -2,7 +2,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class AboutPage {
-    private final WebDriver driver;
+    private WebDriver driver;
     PerformIs util = new PerformIs();
 
     AboutPage(WebDriver driver) {
@@ -16,14 +16,11 @@ public class AboutPage {
 
 
     boolean getPlayers() {
-        util.waitTo(2, playersOnline);
-        util.waitTo(2, playersInGames);
         return util.onlineComparison(util.findByXpath(playersInGames).getText(), util.findByXpath(playersOnline).getText());
     }
 
 
     void clickToMarket() {
-        util.waitTo(2, buttonMarket);
         util.findByXpath(buttonMarket).click();
     }
 

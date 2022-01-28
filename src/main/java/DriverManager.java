@@ -3,8 +3,11 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 class DriverManager {
 
@@ -12,9 +15,17 @@ class DriverManager {
         DriverManager.driver = driver;
     }
 
-
-
     private static WebDriver driver;
+
+    public static ChromeOptions getOptions() {
+        return options;
+    }
+
+    public static void setOptions(ChromeOptions options) {
+        DriverManager.options = options;
+    }
+
+    private static ChromeOptions options;
 
     public String getBrowser() {
         return browser;
@@ -32,11 +43,11 @@ class DriverManager {
 
 
                 if (getBrowser().equals("chrome")) {
-                    ChromeOptions options = new ChromeOptions();
-                    options.addArguments("--incognito");
-                    options.addArguments("--lang=en-GB");
                     WebDriverManager.chromedriver().setup();
-                    driver = new ChromeDriver(options);
+//                    ChromeOptions options = new ChromeOptions();
+//                    options.addArguments(PerformIs.util().getString("incognito"));
+//                    options.addArguments("--start-maximized");
+                    driver = new ChromeDriver(getOptions());
                     driver.manage().window().maximize();
                 } else {
                     setBrowser(browser);
@@ -58,4 +69,16 @@ class DriverManager {
         driver.quit();
         setDriver(null);
     }
+
+    public void chromeOptions(String incognito, String language) throws IOException {
+        ChromeOptions options = new ChromeOptions();
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("intl.accept_languages", PerformIs.util().getString(language));
+        options.addArguments(PerformIs.util().getString(incognito));
+//        options.addArguments(PerformIs.util().getString(incognito), PerformIs.util().getString(language));
+        options.setExperimentalOption("prefs", prefs);
+        options.setCapability(ChromeOptions.CAPABILITY, options);
+        setOptions(options);
+    }
+
 }

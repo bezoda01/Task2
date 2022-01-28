@@ -3,69 +3,56 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 
-public class MainPage extends PerformIs {
-
-    private By uniqueElement = By.id("home_maincap_v7");
-
-    private By about = By.xpath("//a[contains(text(),'STEAM')]");
-
-    private By newButton = By.id("noteworthy_tab");
-
-    private By leaderOfSells = By.cssSelector("a[href*='topsellers'].popup_menu_item");
-
-    private By buttonCommunity = By.xpath("//div[@class = 'supernav_container']//a[@data-tooltip-content = '.submenu_community']");
-
-    private  By commMarket = By.cssSelector("a.submenuitem[href*='market']");
-
+public class MainPage {
 
     private final WebDriver driver;
+    PerformIs util = new PerformIs();
 
     MainPage(WebDriver driver) {
         this.driver = driver;
     }
+
+    private By uniqueElement = By.id("store_nav_area");
+    private By about = By.cssSelector(".menuitem[href*='about']");
+    private By newButton = By.id("noteworthy_tab");
+    private By leaderOfSells = By.cssSelector("a[href*='topsellers'].popup_menu_item");
+    private By buttonCommunity = By.xpath("//div[@class = 'supernav_container']//a[@data-tooltip-content = '.submenu_community']");
+    private  By commMarket = By.cssSelector("a.submenuitem[href*='market']");
 
     void goToPage(String url) {
         driver.get(url);
     }
 
     void clickToAbout() {
-        waitTo(uniqueElement, 5);
-        findById(about).click();
+        util.findByXpath(about).click();
     }
 
     boolean isThisPage() {
-        waitTo(uniqueElement, 5);
-        return findById(about).isEnabled();
+        return util.findByXpath(about).isEnabled();
     }
 
     boolean isThatMarket() {
-        waitTo(uniqueElement, 5);
-        return findById(uniqueElement).isEnabled();
+        return util.findById(uniqueElement).isEnabled();
     }
 
     void goCursorToNew() {
         Actions actions = new Actions(driver);
-        actions.moveToElement(findByXpath(newButton)).release().build().perform();
+        actions.moveToElement(util.findByXpath(newButton)).release().build().perform();
     }
 
     void clickToLeader() {
-        waitTo(5, leaderOfSells);
         JavascriptExecutor executor = (JavascriptExecutor)driver;
-        executor.executeScript("arguments[0].click();", findByXpath(leaderOfSells));
+        executor.executeScript("arguments[0].click();", util.findByXpath(leaderOfSells));
     }
 
     void moveToCommunity() {
         Actions actions = new Actions(driver);
-        actions.moveToElement(findByXpath(buttonCommunity)).release().build().perform();
+        actions.moveToElement(util.findByXpath(buttonCommunity)).release().build().perform();
 
     }
 
     void clickToComMarket() {
-        waitTo(5, commMarket);
         JavascriptExecutor executor = (JavascriptExecutor)driver;
-        executor.executeScript("arguments[0].click();", findByXpath(commMarket));
+        executor.executeScript("arguments[0].click();", util.findByXpath(commMarket));
     }
-
-
-
 }

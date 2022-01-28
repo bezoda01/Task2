@@ -1,151 +1,124 @@
-import com.fasterxml.jackson.core.JsonProcessingException;
+import DataClasses.Filters;
+import DataClasses.Product;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
+import java.io.IOException;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
-public class TradingPage extends PerformIs {
+public class TradingPage {
 
     private final WebDriver driver;
+    PerformIs performIs = new PerformIs();
 
     TradingPage(WebDriver driver) {
         this.driver = driver;
     }
 
     private By search = By.id("advancedSearchBox");
-
-    private By GameInPool = By.id("app_option_570");
-
+    private By unique = By.id("tabMyListings");
+    private By uniqueElement = By.xpath("//div[@class = 'title_text']");
+    private By additionallyWindows = By.id("market_search_advanced_show");
     private By clickGameInPool = By.id("app_option_0_selected");
-
     private By firstLot = By.id("result_0_name");
-
     private By selectedHero = By.xpath("//select[@name='category_570_Hero[]']");
-
-    private By heroLifestealer = By.xpath("//option[@value = 'tag_npc_dota_hero_life_stealer']");
-
-    private By rarityImortal = By.id("tag_570_Rarity_Rarity_Immortal");
-
-    private By poolSearch = By.xpath("//div[@onclick]//span[contains(text(),'Поиск')]");
-
+    private By heroName;
+    private By rarityImortal;
+    private By poolSearch = By.xpath("//div[@class = 'btn_medium btn_green_white_innerfade']/span");
     private By numbersResultBefore = By.id("searchResults_total");
-
     private By numbersResultAfter = By.id("searchResults_total");
-
     private By iconRemoveGolden = By.xpath("//*[contains(text(),'golden')]//span");
-
     private By iconRemoveDota = By.xpath("//a[@href][1]/span");
-
     private By firstLotName = By.id("result_0_name");
-
     private By heroInLot = By.xpath("//*[contains(text(),'Lifestealer')]//span/..");
-
     private By rarityInLot = By.xpath("//*[contains(text(),'Immortal')]//span/..");
-
     private By rarityInGame = By.id("largeiteminfo_item_type");
-
     private By nameHeroInLot = By.id("largeiteminfo_item_name");
-
     private By heroLot = By.xpath("//div[contains(text(),'Lifestealer')]");
 
-    ArrayList<String> firstFive = new ArrayList<>();
-    ArrayList<String> filter;
-    ArrayList<String> filterItemBefore;
-    ArrayList<String> filterItemAfter;
-
-
     boolean checkIsOpen() {
-        return findByXpath("//span[contains(text(),'Активные')]").isEnabled();
+        return performIs.findById(unique).isEnabled();
     }
 
     void openAdvancedOptions() {
-        findByXpath("//span[contains(text(),'Дополнительные')]").click();
+        performIs.findByXpath(additionallyWindows).click();
     }
 
     boolean checkAdvOpIsOpen() {
-        return findByXpath("//div[contains(text(),'Поиск')]").isEnabled();
+        return performIs.findByXpath(uniqueElement).isEnabled();
     }
 
     void clickToGameChoice() {
         driver.findElement(clickGameInPool).click();
     }
 
-    void choiceGame() {
-        driver.findElement(GameInPool).click();
+    void choiceGame(String game) throws IOException {
+        By temp = By.id(PerformIs.util().getString(game));
+        performIs.findById(temp).click();
     }
 
     void clickToSelectHero() {
-        waitTo(5, selectedHero);
-        findByXpath(selectedHero).click();
+        performIs.waitTo(selectedHero);
+        performIs.findByXpath(selectedHero).click();
     }
 
-    void selectLifeStealer() {
-        waitTo(5, heroLifestealer);
-        findByXpath(heroLifestealer).click();
+    void selectHero(String hero) throws IOException {
+        heroName = By.xpath(PerformIs.util().getString(hero));
+        performIs.waitTo(heroName);
+        performIs.findByXpath(heroName).click();
     }
 
     void clickAndInput(String input) {
-        Actions actions = new Actions(driver);
-        actions.doubleClick(findById(search)).sendKeys(input).release().build().perform();
-    }
-
-    void clickRarityAndSearch() {
 
         Actions actions = new Actions(driver);
-        actions.click(findById(rarityImortal)).release().build().perform();
-        findByXpath(poolSearch).click();
+        actions.doubleClick(performIs.findById(search)).sendKeys(input).release().build().perform();
     }
 
-    void setFilterArr() {
-        filter = new ArrayList<String>() {{
-            add("//*[contains(text(),'Dota 2')]");
-            add("//*[contains(text(),'Lifestealer')]");
-            add("//*[contains(text(),'Immortal')]");
-            add("//*[contains(text(),'golden')]");
-        }};
-
+    void clickRarityAndSearch(String rarity) throws IOException {
+        rarityImortal = By.id(PerformIs.util().getString(rarity));
+        Actions actions = new Actions(driver);
+        actions.click(performIs.findById(rarityImortal)).release().build().perform();
+        performIs.findByXpath(poolSearch).click();
     }
 
-    boolean methodInfoFirstFive() throws FileNotFoundException, JsonProcessingException {
-        waitTo(firstLotName, 5);
-        return infoFirstFiveGolden(firstFive);
+    Filters setFilterArr() {
+        return new Filters(
+                performIs.findByXpath("//a[@class = 'market_searchedForTerm' and text()][1]").getText(),
+                performIs.findByXpath("//a[@class = 'market_searchedForTerm' and text()][2]").getText(),
+                performIs.findByXpath("//a[@class = 'market_searchedForTerm' and text()][3]").getText(),
+                performIs.findByXpath("//a[@class = 'market_searchedForTerm' and text()][4]").getText());
     }
 
-    boolean returnElement(String element) {
-        return findByXpath(element).isEnabled();
+    boolean methodInfoFirstFive() {
+        performIs.waitTo(firstLotName);
+        return performIs.infoFirstFiveGolden();
     }
 
     boolean removeIcons() {
-        int numbersResultsBefore = Integer.parseInt(findById(numbersResultBefore).getText());
-        findByXpath(iconRemoveGolden).click();
+        int numbersResultsBefore = Integer.parseInt(performIs.findById(numbersResultBefore).getText());
+        performIs.findByXpath(iconRemoveGolden).click();
 
-        findByXpath(iconRemoveDota).click();
-        int numbersResultsAfter = Integer.parseInt(findById(numbersResultAfter).getText());
+        performIs.findByXpath(iconRemoveDota).click();
+        int numbersResultsAfter = Integer.parseInt(performIs.findById(numbersResultAfter).getText());
 
         return numbersResultsBefore != numbersResultsAfter;
     }
 
+    Product setProductFirst() {
+        return new Product(
+                performIs.findById(firstLotName).getText(),
+                performIs.findByXpath(heroInLot).getText(),
+                performIs.findByXpath(rarityInLot).getText());
+    }
+
     void clickToItem() {
-        filterItemBefore = new ArrayList<String>() {{
-            add(findById(firstLotName).getText());
-            add(findByXpath(heroInLot).getText());
-            add(findByXpath(rarityInLot).getText());
-        }};
-        findById(firstLot).click();
+        performIs.findById(firstLot).click();
     }
 
-    void getInfoAboutItem(){
-
-        waitTo(5, heroLot);
-
-        filterItemAfter = new ArrayList<String>() {{
-            add(findById(nameHeroInLot).getText());
-            add(returnString(findById(heroLot).getText()));
-            add(returnString2(findById(rarityInGame).getText()));
-        }};
+    Product setProductSecond() {
+        performIs.waitTo(heroLot);
+        return new Product(
+                performIs.findById(nameHeroInLot).getText(),
+                performIs.returnString(performIs.findById(heroLot).getText()),
+                performIs.returnString2(performIs.findById(rarityInGame).getText()));
     }
-
-
 }
